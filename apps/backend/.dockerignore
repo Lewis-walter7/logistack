@@ -1,0 +1,16 @@
+# Ignore unnecessary stuff
+node_modules
+.env
+.git
+.gitignore
+Dockerfile
+docker-compose.yml
+.vscode
+*.log
+npm-debug.log
+yarn-error.log
+.next
+coverage
+.env.local
+.env.development
+.env.production
