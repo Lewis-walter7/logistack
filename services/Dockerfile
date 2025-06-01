@@ -9,6 +9,8 @@ WORKDIR /usr/src/django_backend
 
 # Install dependencies
 COPY requirements.txt .
+RUN pip install --upgrade pip
+
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy project files
