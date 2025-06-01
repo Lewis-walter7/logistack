@@ -13,7 +13,7 @@ services:
 
   frontend:
     build:
-      context: ../apps/frontend
+      context: ../apps/frontend/frontend-client
       dockerfile: Dockerfile
     container_name: logistack-frontend
     ports:
@@ -23,7 +23,21 @@ services:
     depends_on:
       - backend
     volumes:
-      - ../apps/frontend:/app
+      - ../apps/frontend/frontend-client:/app
+    
+  frontend-driver:
+    build:
+      context: ../apps/frontend/frontend-driver
+      dockerfile: Dockerfile
+    container_name: logistack-frontend-driver
+    ports:
+      - "4000:3000"         # Next.js on localhost:4000
+    env_file:
+      - ../.env
+    depends_on:
+      - backend
+    volumes:
+      - ../apps/frontend/frontend-driver:/app
 
   db:
     image: postgres:15
