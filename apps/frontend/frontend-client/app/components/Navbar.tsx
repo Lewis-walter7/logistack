@@ -1,11 +1,26 @@
 'use client'
 
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { FaUserCircle } from 'react-icons/fa';
+import useRegisterModal from '../hooks/useRegisterModal';
+import useLoginModal from '../hooks/useLoginModal';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const registerModal = useRegisterModal()
+    const loginModal = useLoginModal()
+
+    const handleSignIn = () => {
+        setIsOpen(false);
+        loginModal.onOpen();
+    }
+
+    const handleSignup = () => {
+        setIsOpen(false);
+        registerModal.onOpen();
+    }
+
   return (
     <div className='fixed top-0 left-0 right-0 items-center bg-white shadow-md z-50'>
         <div className='relative flex items-center justify-between px-4 py-2 h-[64px]'>
@@ -37,7 +52,7 @@ const Navbar = () => {
                 <div
                     onClick={() => setIsOpen(!isOpen)}
                 >
-                    <button>
+                    <button className='cursor-pointer p-2 rounded-full hover:bg-gray-100 transition-colors duration-300'>
                         <FaUserCircle
                             size={30}
                         />
@@ -47,10 +62,16 @@ const Navbar = () => {
             { isOpen &&
                 <div className='absolute inset-y-0 right-0 top-[60px] items-center pr-4'>
                     <div className='bg-gray-200 space-y-2 py-2 shadow-lg rounded-sm flex flex-col'>
-                        <button className='px-4 cursor-pointer text-black transition-colors duration-300'>
+                        <button 
+                            className='px-4 cursor-pointer text-black transition-colors duration-300'
+                            onClick={handleSignIn}
+                        >
                             Sign In
                         </button>
-                        <button className='ml-2 cursor-pointer px-4 transition-colors duration-300'>
+                        <button 
+                            className='ml-2 cursor-pointer px-4 transition-colors duration-300'
+                            onClick={handleSignup}
+                        >
                             Sign Up
                         </button>
                     </div>
