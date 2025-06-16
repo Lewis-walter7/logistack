@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import LoginModal from "./components/modal/LoginModal";
 import RegisterModal from "./components/modal/RegisterModal";
+import Sidebar from "./components/sidebar/sidebar";
 
 
 export default function RootLayout({
@@ -13,10 +14,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Navbar/>
+        
         <LoginModal />
         <RegisterModal />
-        {children}
+        <div className="flex min-h-screen">
+          <Sidebar />
+          <main className="flex-1 bg-gray-50 overflow-y-auto">
+            <Navbar />
+            <div className="p-4">{children}</div>
+          </main>
+        </div>
+        {/* <Sidebar />
+        {children} */}
       </body>
     </html>
   );

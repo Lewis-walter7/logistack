@@ -1,35 +1,33 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+// auth/auth.controller.ts
+import { Controller, Post, Body, Res, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
-    @Post('register')
-    async register(@Body() body, @Res() res: Response) {
-        const user = await this.authService.register(body);
-        const token = await this.authService.login(user);
+  @Post('login')
+  async login(
+    @Body() body: { email: string; password: string },
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const user = await this.authService.validateUser(body.email, body.password);
+    const token = await this.authService.login(user);
 
-        res.cookie("token", token.access_token, {
-            httpOnly: true,
-            secure: true, // Set to true if using HTTPS
-        }).send({ user})
-    }
+    res.cookie('authToken', token, {
+      httpOnly: true,
+      secure: false, // true in production
+      sameSite: 'lax',
+      path: '/',
+    });
 
+    return { message: 'Login successful' };
+  }
 
-    @Post('login')
-    async login(@Body() body, @Res() res: Response) {
-        const user = await this.authService.validateUser(body.email, body.password);
-        if (!user) {
-            return res.status(401).send({ message: 'Invalid credentials' });
-        }
-        const token = await this.authService.login(user);
-
-        res.cookie("token", token.access_token, {
-            httpOnly: true,
-            secure: true, // Set to true if using HTTPS
-        }).send({ user });
-    }
-
+  @Post('logout')
+  async logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('authToken');
+    return { message: 'Logged out' };
+  }
 }
